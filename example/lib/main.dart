@@ -15,7 +15,9 @@ class MyApp extends StatelessWidget {
       // theme: ThemeData.dark(useMaterial3: true),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       builder: (context, child) {
-        return FrostedToastOverlay(child: child ?? const SizedBox());
+        return FrostedToastOverlay(
+          child: child ?? const MyHomePage(title: 'Flutter Demo Home Page'),
+        );
       },
     );
   }
@@ -31,14 +33,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  void onShowToast() {
     FrostedToastService.showToast(
       context,
-      'Incremented!',
-      alignment: Alignment.bottomCenter,
-      isDarkBackground: true,
+      options: const FrostedToastOptions(
+        message: 'Hello, Frosted Toast!',
+        alignment: Alignment.bottomCenter,
+        isDarkBackground: false,
+        child: Row(
+          children: [
+            Icon(Icons.info),
+            SizedBox(width: 8),
+            Text('Hello, Frosted Toast!'),
+          ],
+        ),
+        // child: Column(
+        //   mainAxisSize: MainAxisSize.min,
+        //   children: [
+        //     Icon(Icons.info),
+        //     SizedBox(height: 8),
+        //     Text('Hello, Frosted Toast!'),
+        //   ],
+        // ),
+      ),
     );
   }
 
@@ -50,23 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: ElevatedButton(
+          onPressed: onShowToast,
+          child: const Text('Show Toast'),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

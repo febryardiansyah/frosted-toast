@@ -22,19 +22,19 @@ class FrostedToastService {
   static final GlobalKey<OverlayState> _overlayKey = GlobalKey<OverlayState>();
 
   static void showToast(
-    BuildContext context,
-    String message, {
-    Alignment alignment = Alignment.topCenter,
-    bool isDarkBackground = false,
+    BuildContext context, {
+    FrostedToastOptions options = const FrostedToastOptions(),
   }) {
     late OverlayEntry overlayEntry;
 
     overlayEntry = OverlayEntry(
       builder: (context) => FrostedToastComponent(
-        params: FrostedToastParams(
-          message: message,
-          alignment: alignment,
-          isDarkBackground: isDarkBackground,
+        options: FrostedToastOptions(
+          message: options.message,
+          alignment: options.alignment,
+          isDarkBackground: options.isDarkBackground,
+          child: options.child,
+          insetsPadding: options.insetsPadding,
         ),
         onDismiss: () {
           overlayEntry.remove();

@@ -1,27 +1,31 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class FrostedToastParams {
+class FrostedToastOptions {
   final String message;
   final Alignment alignment;
   final bool isDarkBackground;
   final EdgeInsets insetsPadding;
+  final Widget? child;
+  final Duration autoDismissDuration;
 
-  const FrostedToastParams({
-    required this.message,
-    this.alignment = Alignment.topCenter,
+  const FrostedToastOptions({
+    this.message = '',
+    this.alignment = Alignment.bottomCenter,
     this.isDarkBackground = false,
     this.insetsPadding = const EdgeInsets.symmetric(horizontal: 8),
+    this.child,
+    this.autoDismissDuration = const Duration(seconds: 3),
   });
 }
 
 class FrostedToastComponent extends StatefulWidget {
-  final FrostedToastParams params;
+  final FrostedToastOptions options;
   final VoidCallback onDismiss;
 
   const FrostedToastComponent({
     super.key,
-    required this.params,
+    required this.options,
     required this.onDismiss,
   });
 
@@ -34,13 +38,13 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
 
-  FrostedToastParams get params => widget.params;
+  FrostedToastOptions get options => widget.options;
   bool isBottomPosition = false;
 
   @override
   void initState() {
     super.initState();
-    isBottomPosition = params.alignment.y > 0;
+    isBottomPosition = options.alignment.y > 0;
 
     _animationController = AnimationController(
       vsync: this,
@@ -48,7 +52,7 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0, isBottomPosition ? 1 : -1), // Starts offscreen (top)
+      begin: Offset(0, isBottomPosition ? 1 : -1),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
@@ -56,8 +60,7 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
 
     _animationController.forward();
 
-    // Auto-dismiss after 3 seconds
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(options.autoDismissDuration, () {
       if (mounted) {
         _animationController.reverse().then((_) => widget.onDismiss());
       }
@@ -72,12 +75,12 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = widget.params.isDarkBackground;
+    final isDarkMode = options.isDarkBackground;
 
     return SafeArea(
       child: Container(
-        alignment: widget.params.alignment,
-        margin: widget.params.insetsPadding,
+        alignment: widget.options.alignment,
+        margin: widget.options.insetsPadding,
         child: SlideTransition(
           position: _slideAnimation,
           child: Padding(
@@ -85,13 +88,13 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: isDarkMode
-                        ? Colors.black.withOpacity(0.5) // Glossy effect
+                        ? Colors.black.withOpacity(0.5)
                         : Colors.white.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
@@ -102,9 +105,9 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
@@ -112,13 +115,14 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
-                        child: Text(
-                          widget.params.message,
-                          style: TextStyle(
-                            color: isDarkMode ? Colors.white : Colors.black,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: options.child ??
+                            Text(
+                              widget.options.message,
+                              style: TextStyle(
+                                color: isDarkMode ? Colors.white : Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
                       ),
                       GestureDetector(
                         onTap: () {

@@ -35,6 +35,8 @@ class FrostedToastService {
           isDarkBackground: options.isDarkBackground,
           child: options.child,
           insetsPadding: options.insetsPadding,
+          autoDismissDuration: options.autoDismissDuration,
+          autoDismiss: options.autoDismiss,
         ),
         onDismiss: () {
           overlayEntry.remove();

@@ -8,6 +8,7 @@ class FrostedToastOptions {
   final EdgeInsets insetsPadding;
   final Widget? child;
   final Duration autoDismissDuration;
+  final bool autoDismiss;
 
   const FrostedToastOptions({
     this.message = '',
@@ -16,6 +17,7 @@ class FrostedToastOptions {
     this.insetsPadding = const EdgeInsets.symmetric(horizontal: 8),
     this.child,
     this.autoDismissDuration = const Duration(seconds: 3),
+    this.autoDismiss = true,
   });
 }
 
@@ -60,11 +62,11 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
 
     _animationController.forward();
 
-    Future.delayed(options.autoDismissDuration, () {
-      if (mounted) {
+    if (options.autoDismiss) {
+      Future.delayed(options.autoDismissDuration, () {
         _animationController.reverse().then((_) => widget.onDismiss());
-      }
-    });
+      });
+    }
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frosted_toast/frosted_toast.dart';
 
@@ -39,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
       options: const FrostedToastOptions(
         message: 'Hello, Frosted Toast!',
         alignment: Alignment.bottomCenter,
-        isDarkBackground: false,
+        // autoDismiss: false,
         child: Row(
           children: [
             Icon(Icons.info),

@@ -1,6 +1,6 @@
 name: frosted_toast
 description: A macOS-inspired flutter toast notification system package with glass morphism effects
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/febryardiansyah/frosted-toast
 homepage: https://github.com/febryardiansyah/frosted-toast
 

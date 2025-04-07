@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frosted_toast/frosted_toast.dart';
 
@@ -13,8 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // theme: ThemeData.dark(useMaterial3: true),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
       builder: (context, child) {
         return FrostedToastOverlay(
           child: child ?? const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -40,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
       options: const FrostedToastOptions(
         message: 'Hello, Frosted Toast!',
         alignment: Alignment.bottomCenter,
-        // autoDismiss: false,
+        autoDismiss: false,
         child: Row(
           children: [
             Icon(Icons.info),
@@ -60,6 +59,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void hideToast(){
+    FrostedToastService.dismissToast();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,9 +71,19 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: onShowToast,
-          child: const Text('Show Toast'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: onShowToast,
+              child: const Text('Show Toast'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: hideToast,
+              child: const Text('Hide Toast'),
+            ),
+          ],
         ),
       ),
     );

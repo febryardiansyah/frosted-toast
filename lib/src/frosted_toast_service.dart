@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:frosted_toast/frosted_toast.dart';
+part of 'frosted_toast_component.dart';
 
 class FrostedToastOverlay extends StatelessWidget {
   final Widget child;
+
   const FrostedToastOverlay({super.key, required this.child});
 
   @override
@@ -20,14 +20,19 @@ class FrostedToastOverlay extends StatelessWidget {
 
 class FrostedToastService {
   static final GlobalKey<OverlayState> _overlayKey = GlobalKey<OverlayState>();
+  static OverlayEntry? _overlayEntry;
+  static _FrostedToastComponentState? _toastState;
+
+  static bool get isInitialized => _overlayKey.currentState?.mounted == true;
 
   static void showToast(
     BuildContext context, {
     FrostedToastOptions options = const FrostedToastOptions(),
   }) {
-    late OverlayEntry overlayEntry;
+    _checkInitialize();
+    dismissToast();
 
-    overlayEntry = OverlayEntry(
+    _overlayEntry = OverlayEntry(
       builder: (context) => FrostedToastComponent(
         options: FrostedToastOptions(
           message: options.message,
@@ -37,14 +42,46 @@ class FrostedToastService {
           insetsPadding: options.insetsPadding,
           autoDismissDuration: options.autoDismissDuration,
           autoDismiss: options.autoDismiss,
+          onInit: (state) => _toastState = state,
         ),
         onDismiss: () {
-          overlayEntry.remove();
+          _overlayEntry?.remove();
+          _overlayEntry = null;
+          _toastState = null;
         },
       ),
     );
 
-    _overlayKey.currentState?.insert(overlayEntry);
+    if (_overlayEntry != null) _overlayKey.currentState?.insert(_overlayEntry!);
+  }
+
+  static void dismissToast() {
+    _checkInitialize();
+    if (_toastState != null) {
+      _toastState?.dismiss();
+    } else {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    }
+  }
+
+  static void _checkInitialize() {
+    if (!isInitialized) {
+      throw Exception(
+          '''FrostedToastOverlay is not initialized. Please wrap your app with FrostedToastOverlay.
+            Example:   
+              return MaterialApp(
+                title: 'Flutter Demo',
+                home: const MyHomePage(title: 'Flutter Demo Home Page'),
+                debugShowCheckedModeBanner: false,
+                builder: (context, child) {
+                  return FrostedToastOverlay(
+                    child: child ?? const MyHomePage(title: 'Flutter Demo Home Page'),
+                  );
+                },
+              );
+          ''');
+    }
   }
 
   static GlobalKey<OverlayState> get overlayKey => _overlayKey;

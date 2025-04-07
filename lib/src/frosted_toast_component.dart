@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+part 'frosted_toast_service.dart';
+
 class FrostedToastOptions {
   final String message;
   final Alignment alignment;
@@ -9,6 +11,7 @@ class FrostedToastOptions {
   final Widget? child;
   final Duration autoDismissDuration;
   final bool autoDismiss;
+  final void Function(_FrostedToastComponentState state)? onInit;
 
   const FrostedToastOptions({
     this.message = '',
@@ -18,6 +21,7 @@ class FrostedToastOptions {
     this.child,
     this.autoDismissDuration = const Duration(seconds: 3),
     this.autoDismiss = true,
+    this.onInit,
   });
 }
 
@@ -60,6 +64,7 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
+    options.onInit?.call(this);
     _animationController.forward();
 
     if (options.autoDismiss) {
@@ -67,6 +72,11 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
         _animationController.reverse().then((_) => widget.onDismiss());
       });
     }
+  }
+
+  void dismiss() async {
+    await _animationController.reverse();
+    widget.onDismiss();
   }
 
   @override
@@ -127,11 +137,12 @@ class _FrostedToastComponentState extends State<FrostedToastComponent>
                             ),
                       ),
                       GestureDetector(
-                        onTap: () {
-                          _animationController
-                              .reverse()
-                              .then((_) => widget.onDismiss());
-                        },
+                        // onTap: () {
+                        //   _animationController
+                        //       .reverse()
+                        //       .then((_) => widget.onDismiss());
+                        // },
+                        onTap: dismiss,
                         child: Icon(
                           Icons.close,
                           color: isDarkMode ? Colors.white : Colors.black,

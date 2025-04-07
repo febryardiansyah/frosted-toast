@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frosted_toast/frosted_toast.dart';
 
@@ -39,27 +40,59 @@ class _MyHomePageState extends State<MyHomePage> {
       options: const FrostedToastOptions(
         message: 'Hello, Frosted Toast!',
         alignment: Alignment.bottomCenter,
-        autoDismiss: false,
+        autoDismiss: true,
+        duration: Duration(seconds: 3),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.info),
+            Icon(Icons.check_circle, color: Colors.green),
             SizedBox(width: 8),
-            Text('Hello, Frosted Toast!'),
+            Text('Operation Successful!'),
           ],
         ),
-        // child: Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: [
-        //     Icon(Icons.info),
-        //     SizedBox(height: 8),
-        //     Text('Hello, Frosted Toast!'),
-        //   ],
-        // ),
       ),
     );
   }
 
-  void hideToast(){
+  void onShowErrorToast() {
+    FrostedToastService.showToast(
+      context,
+      options: const FrostedToastOptions(
+        message: 'Error Occurred!',
+        alignment: Alignment.topCenter,
+        autoDismiss: true,
+        duration: Duration(seconds: 3),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Something went wrong!'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void onShowLoadingToast() {
+    FrostedToastService.showToast(
+      context,
+      options: const FrostedToastOptions(
+        alignment: Alignment.bottomCenter,
+        autoDismiss: false,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CupertinoActivityIndicator(),
+            SizedBox(width: 8),
+            Text('Loading...'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void hideToast() {
     FrostedToastService.dismissToast();
   }
 
@@ -76,7 +109,17 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             ElevatedButton(
               onPressed: onShowToast,
-              child: const Text('Show Toast'),
+              child: const Text('Show Success Toast'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: onShowErrorToast,
+              child: const Text('Show Error Toast'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: onShowLoadingToast,
+              child: const Text('Show Loading Toast'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(

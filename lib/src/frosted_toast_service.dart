@@ -40,7 +40,7 @@ class FrostedToastService {
           isDarkBackground: options.isDarkBackground,
           child: options.child,
           insetsPadding: options.insetsPadding,
-          autoDismissDuration: options.autoDismissDuration,
+          duration: options.duration,
           autoDismiss: options.autoDismiss,
           onInit: (state) => _toastState = state,
         ),

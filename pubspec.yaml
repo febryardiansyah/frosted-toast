@@ -1,5 +1,5 @@
 name: frosted_toast
-description: A starting point for Dart libraries or applications.
+description: A macOS-inspired flutter toast notification system package with glass morphism effects
 version: 1.0.0
 repository: https://github.com/febryardiansyah/frosted-toast
 homepage: https://github.com/febryardiansyah/frosted-toast

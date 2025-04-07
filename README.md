@@ -1,39 +1,74 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Frosted Toast
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+Frosted Toast is a Flutter package designed to provide customizable and visually appealing toast notifications for your applications. Whether you need simple messages or rich, interactive toasts, Frosted Toast has you covered.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+## Demo
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Here’s a quick preview of Frosted Toast in action:
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+![Frosted Toast Demo](asset/demo.gif)
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To start using Frosted Toast, add the package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+    frosted_toast: ^1.0.0
+```
+
+Then, run `flutter pub get` to fetch the package.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+Here’s a quick example of how to use Frosted Toast:
+
+Before using the package, ensure you wrap your app with `FrostedToastOverlay` in the `builder` method of your `MaterialApp`. Here's an example:
 
 ```dart
-const like = 'sample';
+class MyApp extends StatelessWidget {
+    const MyApp({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+            title: 'Flutter Demo',
+            home: const MyHomePage(title: 'Flutter Demo Home Page'),
+            debugShowCheckedModeBanner: false,
+            builder: (context, child) {
+                return FrostedToastOverlay(
+                    child: child ?? const MyHomePage(title: 'Flutter Demo Home Page'),
+                );
+            },
+        );
+    }
+}
 ```
 
-## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+
+```dart
+import 'package:frosted_toast/frosted_toast.dart';
+
+void showToast(BuildContext context) {
+    FrostedToastService.showToast(
+      context,
+      options: const FrostedToastOptions(
+        message: 'Hello, Frosted Toast!',
+        alignment: Alignment.bottomCenter,
+        autoDismiss: true,
+        duration: Duration(seconds: 3),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.check_circle, color: Colors.green),
+            SizedBox(width: 8),
+            Text('Operation Successful!'),
+          ],
+        ),
+      ),
+    );
+}
+```
+
+For more examples, check the `/example` folder in the repository.

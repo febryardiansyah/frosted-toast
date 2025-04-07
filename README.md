@@ -6,7 +6,9 @@ Frosted Toast is a Flutter package designed to provide customizable and visually
 
 Here’s a quick preview of Frosted Toast in action:
 
-![Frosted Toast Demo](asset/demo.gif)
+<div align="center">
+    <img src="asset/demo.gif" alt="Frosted Toast Demo" width="250" />
+</div>
 
 ## Getting started
 
